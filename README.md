@@ -35,28 +35,41 @@ All YouTube responses are normalised into a consistent { videoId, title, channel
 
 ## Tech Stack
 Frontend — React 18, Vite, Socket.IO Client, CSS Variables
+
 Backend — Python, Flask, Flask-SocketIO (eventlet), SQLAlchemy, PyJWT
+
 Database — PostgreSQL
-Auth — AWS Cognito (Hosted UI, OAuth 2.0, Authorization Code flow)
+
+Auth — AWS Cognito 
+
 Infrastructure — Docker, AWS EKS, Helm, Jenkins CI/CD, Terraform
 
 ## Containerization
 The application is split into two Docker images, both available on Docker Hub:
+
 ### Frontend
 docker pull dockerayush039/sepmfront
+
 The frontend uses a multi-stage build — Stage 1 compiles the React app using Node.js, Stage 2 copies the static output into an nginx:alpine container. The nginx config also proxies /api/ and /socket.io/ requests to the backend service internally.
+
 ### Backend
+
 docker pull dockerayush039/sepmback
+
 The backend runs Flask with eventlet on port 5000. All secrets (database URL, API keys, Cognito config) are injected at runtime via Kubernetes Secrets — nothing sensitive is baked into the image.
 
 ## Deployment on AWS EKS
+
 The application is deployed on an Amazon EKS cluster (ap-south-1) using Helm as the package manager for Kubernetes resources.
-The Helm chart packages the following K8s resources:
 
 ## Deployment for frontend (nginx+React) and backend (Flask) with 2 replicas each
+
 StatefulSet for PostgreSQL with a persistent EBS volume (PVC)
+
 ClusterIP Services for internal pod-to-pod communication
+
 Ingress using the Nginx Ingress Controller with sticky session annotations for Socket.IO
+
 Kubernetes Secrets for backend environment variables
 
 ---
