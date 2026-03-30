@@ -42,7 +42,7 @@ Database — PostgreSQL
 
 Auth — AWS Cognito 
 
-Infrastructure — Docker, AWS EKS, Helm, Jenkins CI/CD, Terraform
+Infrastructure — AWS, Docker, AWS EKS, Jenkins CI/CD, Terraform
 
 ## Containerization
 The application is split into two Docker images, both available on Docker Hub:
