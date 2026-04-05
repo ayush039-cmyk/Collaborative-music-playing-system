@@ -12,10 +12,10 @@ pipeline {
     stage('Docker Image Build Stage'){
       steps{
         dir('frontend'){
-          docker build -t dockerayush039/sepmfront .
+          sh 'docker build -t dockerayush039/sepmfront .'
         }
         dir('backend'){
-          docker build -t dockerayush039/sepmback .
+          sh 'docker build -t dockerayush039/sepmback .'
         }
       }
     }
@@ -47,9 +47,7 @@ pipeline {
     stage('Deploy to EKS'){
       steps{
         dir('kube'){
-          sh '''
-          bash secrets.sh
-          '''
+          sh 'bash secrets.sh'
         }
       }
     }
