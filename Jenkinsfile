@@ -1,5 +1,5 @@
 pipeline {
-  agents any
+  agent any
   
   environment {
     AWS_ACCESS_KEY = ('aws-access-key')
