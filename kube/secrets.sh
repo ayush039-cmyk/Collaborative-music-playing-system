@@ -1,22 +1,21 @@
 #!/bin/bash
 set -e
 
-REGION="ap-south-1"
+export AWS_DEFAULT_REGION="ap-south-1"
+
 SECRET_ID="sepm-back-secrets"
 
 echo "Pulling secrets from AWS and creating Kubernetes secret..."
-aws secretsmanager get-secret-value \
-  --secret-id $SECRET_ID \
-  --region $REGION \
-  --query SecretString \
-  --output text | \
-python3 -c "
+
+SECRET_JSON=$(aws secretsmanager get-secret-value --secret-id $SECRET_ID --query SecretString --output text)
+
+
+echo "$SECRET_JSON" | python3 -c "
 import json, sys
 d = json.load(sys.stdin)
+# Process and print secret format
 for k, v in d.items():
-    k = k.strip('\"').strip()
-    v = str(v).strip('\"').strip()
-    print(f'{k}={v}')
+    print(f'{k.strip()}={v.strip()}')
 " | kubectl create secret generic $SECRET_ID --from-env-file=/dev/stdin --dry-run=client -o yaml | kubectl apply -f -
 
 echo "Deploying backend..."
