@@ -38,8 +38,8 @@ pipeline {
 
     stage('Push Image to DockerHub'){
       steps{
-        docker push dockerayush039/sepmfront
-        docker push dockerayush039/sepmback
+        sh 'docker push dockerayush039/sepmfront'
+        sh 'docker push dockerayush039/sepmback'
       }
     }
 
