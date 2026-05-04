@@ -5,9 +5,17 @@ metadata:
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-type: nlb
     service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
-    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:ap-south-1:564553699538:certificate/c1aa51a4-7c48-4459-b69f-65b6542cc1bf
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:ap-south-1:564553699538:certificate/c1aa51a4-7c48-4459-b69f-65b6542cc1bf"
     service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    # Fix #1: explicitly list all subnets across all AZs your nodes can land in
+    service.beta.kubernetes.io/aws-load-balancer-subnets: "subnet-082744ee7e09d7247,subnet-0a537e3c7c5534b3c,subnet-0ccc89e91c11c1ccf"
+    # Fix #2: enable cross-zone so any AZ endpoint can reach any healthy target
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    # Fix #3: health check on the plain HTTP port, not the SSL nodeport
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "31085"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: "HTTP"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: "/"
 spec:
   type: LoadBalancer
   selector:
